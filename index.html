@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>画像クリック切り替え</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      text-align: center;
+    }
+
+    input {
+      margin: 10px 0;
+    }
+
+    img {
+      display: none;
+      max-width: 90%;
+      max-height: 70vh;
+      margin-top: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>画像を2枚アップロード</h2>
+
+  <input type="file" id="file1" accept="image/*"><br>
+  <input type="file" id="file2" accept="image/*"><br>
+
+  <img id="preview" alt="クリックで切り替え">
+
+  <div class="hint">画像をクリックすると切り替わります</div>
+
+  <script>
+    const file1 = document.getElementById("file1");
+    const file2 = document.getElementById("file2");
+    const img = document.getElementById("preview");
+
+    let imgSrc1 = null;
+    let imgSrc2 = null;
+    let showingFirst = true;
+
+    function tryShowImage() {
+      if (imgSrc1 && imgSrc2) {
+        img.src = imgSrc1;
+        img.style.display = "block";
+      }
+    }
+
+    file1.addEventListener("change", () => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        imgSrc1 = e.target.result;
+        tryShowImage();
+      };
+      reader.readAsDataURL(file1.files[0]);
+    });
+
+    file2.addEventListener("change", () => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        imgSrc2 = e.target.result;
+        tryShowImage();
+      };
+      reader.readAsDataURL(file2.files[0]);
+    });
+
+    img.addEventListener("click", () => {
+      if (!imgSrc1 || !imgSrc2) return;
+
+      img.src = showingFirst ? imgSrc2 : imgSrc1;
+      showingFirst = !showingFirst;
+    });
+  </script>
+
+</body>
+</html>
